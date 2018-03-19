@@ -52,6 +52,14 @@ export class JsonEditorComponent implements OnInit, ControlValueAccessor {
       var _this = this
       this.options.onChange = function () {
         try {
+	  // Currently, this fetches the text-only representation so
+	  // that a separate angular validation step can determine if
+	  // it is valid json. This has the advantage of not throwing
+	  // exceptions when fetching the data, but requires the
+	  // parent form validate the json. An alternative approch
+	  // would be to silently not update the form value until it
+	  // is valid json, but that makes doing form validation as
+	  // more difficult when using reactive form validation.
           _this.onChangeCallback(_this.editor.getText())
         }
         catch(e) {}
@@ -88,8 +96,15 @@ export class JsonEditorComponent implements OnInit, ControlValueAccessor {
     return this.editor.getText();
   }
 
-  public set(json: JSON) {
-    this.editor.set(json);
+  public set(value: JSON | string) {
+    switch(typeof value) {
+      case "string":
+        return this.editor.setText(value);
+      case "object":
+        return this.editor.set(value);
+      default:
+        throw new Error("set called with unexpected type: " + (typeof value))
+    }
   }
 
   public setMode(mode: JsonEditorMode) {

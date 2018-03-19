@@ -1,13 +1,13 @@
 {
-  "name": "ang-jsoneditor",
+  "name": "@malloc47/ang-jsoneditor",
   "version": "1.5.11",
   "license": "MIT",
-  "homepage": "https://github.com/mariohmol/ang-jsoneditor",
+  "homepage": "https://github.com/malloc47/ang-jsoneditor",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mariohmol/ang-jsoneditor.git"
+    "url": "https://github.com/malloc47/ang-jsoneditor.git"
   },
-  "author": "Manish Sodavadiya <manish_it56@yahoo.com>, Mario Mol <mariohmol@gmail.com>",
+  "author": "Manish Sodavadiya <manish_it56@yahoo.com>, Mario Mol <mariohmol@gmail.com>, Jarrell Waggoner <malloc47@gmail.com>",
   "keywords": [
     "angular",
     "jsoneditor",
@@ -22,11 +22,10 @@
   },
   "ngPackage": {
     "$schema": "./node_modules/ng-packagr/ng-package.schema.json",
-    "dest": "dist/ang-jsoneditor",
+    "dest": "../dist/ang-jsoneditor",
     "workingDirectory": "../.ng_build",
     "lib": {
       "entryFile": "src/public_api.ts"
-    },
-    "dest": "../dist/ang-jsoneditor"
+    }
   }
 }

@@ -1,16 +1,22 @@
 import {
   Component, OnInit, ElementRef, Input, ViewChild,
-  SimpleChanges
+  forwardRef, SimpleChanges
 } from '@angular/core';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import * as editor from 'jsoneditor';
 
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'json-editor',
-  template: '<div #jsonEditorContainer></div>'
+  template: '<div #jsonEditorContainer></div>',
+  providers: [{
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => JsonEditorComponent),
+    multi: true
+  }]
 })
 
-export class JsonEditorComponent implements OnInit {
+export class JsonEditorComponent implements OnInit, ControlValueAccessor {
   private editor: any;
 
   @ViewChild('jsonEditorContainer') jsonEditorContainer: ElementRef;
@@ -19,6 +25,9 @@ export class JsonEditorComponent implements OnInit {
 
   @Input() options: JsonEditorOptions = new JsonEditorOptions();
   @Input('data')
+
+  onChangeCallback;
+
   set data(value: Object) {
     this._data = value;
     if (this.editor) {
@@ -27,10 +36,27 @@ export class JsonEditorComponent implements OnInit {
     }
   }
 
+  registerOnChange(fn) { this.onChangeCallback = fn; }
+
+  registerOnTouched(fn) {  }
+
+  writeValue(value) {
+    this.set(value)
+  }
+
   constructor() {
   }
 
   ngOnInit() {
+    if (!this.options.onChange) {
+      var _this = this
+      this.options.onChange = function () {
+        try {
+          _this.onChangeCallback(_this.editor.getText())
+        }
+        catch(e) {}
+      }
+    }
     this.editor = new editor(this.jsonEditorContainer.nativeElement, this.options, this._data);
   }
 
